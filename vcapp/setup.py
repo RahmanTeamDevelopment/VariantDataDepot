@@ -5,6 +5,12 @@ setup(
     packages=['vcapp'],
     include_package_data=True,
     install_requires=[
-        'vcapp',
+        'flask',
+    ],
+    setup_requires=[
+        'pytest-runner',
+    ],
+    tests_require=[
+        'pytest'
     ],
 )
