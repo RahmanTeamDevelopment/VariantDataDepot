@@ -1,0 +1,3 @@
+graft vcapp/templates
+graft vcapp/static
+include vcapp/schema.sql
