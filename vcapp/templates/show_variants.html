@@ -13,9 +13,9 @@
       </dl>
     </form>
   {% endif %}
-  <ul class=entries>
-  {% for entry in entries %}
-    <li><h2>{{ entry.title }}</h2>{{ entry.text|safe }}
+  <ul class=variants>
+  {% for variant in variants %}
+    <li><h2>{{ variant.chrom }}</h2>{{ variant.pos }}{{ variant.ref }}{{ variant.alt }}
   {% else %}
     <li><em>Unbelievable.  No entries here so far</em>
   {% endfor %}

@@ -1,5 +1,6 @@
 
-pep8:
+.PHONY: check
+check:
 	pep8 vcapp
 
 .PHONY: test

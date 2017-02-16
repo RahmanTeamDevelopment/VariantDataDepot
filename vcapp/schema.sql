@@ -5,5 +5,5 @@ create table variants (
   chrom text not null,
   pos integer not null,
   ref text not null,
-  alt tex not null
+  alt text not null
 );

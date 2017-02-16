@@ -1,7 +1,7 @@
 import os
 import sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
-     render_template, flash
+     render_template, flash, jsonify
 
 
 app = Flask(__name__) # create the application instance :)
@@ -14,6 +14,7 @@ app.config.update(dict(
     USERNAME='admin',
     PASSWORD='default'
 ))
+
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
 
@@ -29,6 +30,7 @@ def init_db():
     with app.open_resource('schema.sql', mode='r') as f:
         db.cursor().executescript(f.read())
     db.commit()
+
 
 @app.cli.command('initdb')
 def initdb_command():
@@ -53,6 +55,15 @@ def close_db(error):
         g.sqlite_db.close()
 
 
+@app.route('/num_variants')
+def num_variants():
+    db = get_db()
+    cur = db.execute('select count(chrom) from variants')
+    result = cur.fetchone()
+    num_variants = result[0]
+    return jsonify({"num_variants" : num_variants})
+
+
 @app.route('/')
 def show_variants():
     db = get_db()
@@ -61,7 +72,7 @@ def show_variants():
     return render_template('show_variants.html', variants=variants)
 
 
-@app.route('/add', methods=['POST'])
+@app.route('/add_variant', methods=['POST'])
 def add_variant():
     if not session.get('logged_in'):
         abort(401)

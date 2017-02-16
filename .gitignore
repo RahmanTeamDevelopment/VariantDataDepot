@@ -1,0 +1,9 @@
+
+# Compiled python files
+*.pyc
+
+# Swap file (e.g. from editing with Vim / Emacs)
+*.swp
+
+# Sqlite databases
+*.db 
