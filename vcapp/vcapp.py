@@ -4,8 +4,8 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash, jsonify
 
 
-app = Flask(__name__) # create the application instance :)
-app.config.from_object(__name__) # load config from this file
+app = Flask(__name__)
+app.config.from_object(__name__)
 
 # Load default config and override config from an environment variable
 app.config.update(dict(
@@ -36,7 +36,6 @@ def init_db():
 def initdb_command():
     """Initializes the database."""
     init_db()
-    print('Initialized the database.')
 
 
 def get_db():
@@ -61,13 +60,17 @@ def num_variants():
     cur = db.execute('select count(chrom) from variants')
     result = cur.fetchone()
     num_variants = result[0]
-    return jsonify({"num_variants" : num_variants})
+    return jsonify({"num_variants": num_variants})
 
 
 @app.route('/')
 def show_variants():
     db = get_db()
-    cur = db.execute('select chrom,pos,ref,alt from variants order by chrom,pos asc')
+
+    cur = db.execute(
+        'select chrom,pos,ref,alt from variants order by chrom,pos asc'
+    )
+
     variants = cur.fetchall()
     return render_template('show_variants.html', variants=variants)
 
@@ -77,8 +80,17 @@ def add_variant():
     if not session.get('logged_in'):
         abort(401)
     db = get_db()
-    db.execute('insert into variants (chrom,pos,ref,alt) values (?, ?, ?, ?)',
-                 [request.form['chrom'], request.form['pos'], request.form['ref'], request.form['alt']])
+
+    db.execute(
+        'insert into variants (chrom,pos,ref,alt) values (?, ?, ?, ?)',
+        [
+            request.form['chrom'],
+            request.form['pos'],
+            request.form['ref'],
+            request.form['alt']
+        ]
+    )
+
     db.commit()
     flash('New variant was successfully posted')
     return redirect(url_for('show_variants'))
@@ -104,5 +116,3 @@ def logout():
     session.pop('logged_in', None)
     flash('You were logged out')
     return redirect(url_for('show_variants'))
-
-
