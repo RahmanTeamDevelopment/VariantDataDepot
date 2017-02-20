@@ -29,6 +29,18 @@ def init_db():
     db = get_db()
     with app.open_resource('schema.sql', mode='r') as f:
         db.cursor().executescript(f.read())
+
+
+    # TODO: This is just a temporary hack so that the database is populated
+    # for testing purpose.
+
+    for i in xrange(1000):
+        db.execute(
+            'insert into variants (chrom,pos,ref,alt) values ("1", 100, "C", "T")',
+        )
+
+    # TODO: end of hack
+
     db.commit()
 
 
@@ -63,7 +75,7 @@ def num_variants():
     return jsonify({"num_variants": num_variants})
 
 
-@app.route('/')
+@app.route('/variants')
 def show_variants():
     db = get_db()
 
@@ -71,8 +83,12 @@ def show_variants():
         'select chrom,pos,ref,alt from variants order by chrom,pos asc'
     )
 
-    variants = cur.fetchall()
-    return render_template('show_variants.html', variants=variants)
+    variants = []
+    for index,(chrom,pos,ref,alt) in enumerate(cur.fetchall()):
+        variants.append( (index, chrom, pos, ref, alt) )
+
+    return jsonify(variants)
+    #return render_template('show_variants.html', variants=variants)
 
 
 @app.route('/add_variant', methods=['POST'])

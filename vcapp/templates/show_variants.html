@@ -1,18 +1,5 @@
 {% extends "layout.html" %}
 {% block body %}
-  {% if session.logged_in %}
-    <form action="{{ url_for('add_variant') }}" method=post class=add-variant>
-      <dl>
-        <dt>chrom:
-        <dd><input type=text size=30 name=title>
-        <dt>pos:
-        <dd><input name=pos type=integer>
-        <dd><input name=ref type=text size=10>
-        <dd><input name=alt type=text size=10>
-        <dd><input type=submit value=Share>
-      </dl>
-    </form>
-  {% endif %}
   <ul class=variants>
   {% for variant in variants %}
     <li><h2>{{ variant.chrom }}</h2>{{ variant.pos }}{{ variant.ref }}{{ variant.alt }}

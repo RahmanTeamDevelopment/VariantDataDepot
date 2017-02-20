@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactBootstrap from 'react-bootstrap';
 import { Button, Navbar, NavItem, Nav, MenuItem, NavDropdown } from 'react-bootstrap';
-import { ButtonToolbar, FormGroup, FormControl } from 'react-bootstrap';
+import { ButtonToolbar, FormGroup, FormControl, Table} from 'react-bootstrap';
 import { ButtonGroup } from 'react-bootstrap';
 import logo from './logo.svg';
 import './App.css';
@@ -25,16 +25,10 @@ class App extends Component {
 			  <GeneSearchBox />
 			</div>
           </div>
-
-
-	      <div className="Link-Bar">
-		      <LinkBar />
+	      <div>
+			<VariantQuery />
 	      </div>
 
-
-	      <div className="Board">
-	        <Game />
-	      </div>
 	  </div>
     );
   }
@@ -94,6 +88,60 @@ function GeneSearchBox(props) {
   );
 }
 
+     
+class VariantQuery extends React.Component {
+    constructor() {
+        super();
+        this.state = { variants: [] };
+    }
+
+    componentDidMount() {
+	  this.setState( {variants: [1,2,3,4,5,6]})
+      var that = this;
+
+	  fetch('/variants')
+	    .then(  
+	      function(response) {  
+			  return response.json();
+	      }  
+	    )  
+		.then(
+           function(data) {
+			that.setState({ variants: data });
+		   }
+	   )
+	}
+
+  render() {
+      return (
+          <div class="container">
+			  <Table hover bordered condensed>
+              <thead>
+              <tr>
+                <th>ID</th>
+                <th>chrom</th>
+                <th>pos</th>
+                <th>ref</th>
+                <th>alt</th>
+              </tr>
+              </thead>
+              <tbody>
+                {
+                   this.state.variants.map(
+                     variant => {return <tr><td>{variant[0]}</td><td>{variant[1]}</td><td>{variant[2]}</td><td>{variant[3]}</td><td>{variant[4]}</td></tr>})
+                }
+              </tbody>
+            </Table>
+          </div>
+      );
+  }
+}
+
+
+
+
+
+
 
 class LinkBar extends React.Component {
 	renderLink(url, name) {
@@ -123,6 +171,7 @@ class IconLink extends React.Component {
 
 
 function Square(props) {
+  console.log('This works!');
   return (
       <button className="square" onClick={() => props.onClick()}>
 		{props.value}
