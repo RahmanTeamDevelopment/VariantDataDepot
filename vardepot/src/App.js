@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactBootstrap from 'react-bootstrap';
 import { Button, Navbar, NavItem, Nav, MenuItem, NavDropdown } from 'react-bootstrap';
-import { ButtonToolbar, FormGroup, FormControl, Table} from 'react-bootstrap';
+import { ButtonToolbar, FormGroup, FormControl, Table, Form, ControlLabel, HelpBlock, Label, Select} from 'react-bootstrap';
 import { ButtonGroup } from 'react-bootstrap';
 import logo from './logo.svg';
 import './App.css';
@@ -25,14 +25,25 @@ class App extends Component {
 			  <GeneSearchBox />
 			</div>
           </div>
-	      <div>
+
+		  <div>
+            <VariantSearchForm />
+          </div>
+
+		  <div>
+            <CSNValidatorForm />
+          </div>
+
+	      {/*<div>
 			<VariantQuery />
 	      </div>
+		*/}
 
 	  </div>
     );
   }
 }
+
 
 function NavigationBar(props) {
   return (
@@ -47,12 +58,13 @@ function NavigationBar(props) {
         <Nav>
           <NavItem eventKey={1} href="#">Variants</NavItem>
           <NavItem eventKey={2} href="#">Gene Disease Map</NavItem>
-          <NavDropdown eventKey={3} title="Dropdown" id="basic-nav-dropdown">
-            <MenuItem eventKey={3.1}>Action</MenuItem>
-            <MenuItem eventKey={3.2}>Another action</MenuItem>
-            <MenuItem eventKey={3.3}>Something else here</MenuItem>
+          <NavItem eventKey={3} href="#">CSN Validator</NavItem>
+          <NavDropdown eventKey={4} title="Dropdown" id="basic-nav-dropdown">
+            <MenuItem eventKey={4.1}>Action</MenuItem>
+            <MenuItem eventKey={4.2}>Another action</MenuItem>
+            <MenuItem eventKey={4.3}>Something else here</MenuItem>
             <MenuItem divider />
-            <MenuItem eventKey={3.3}>Separated link</MenuItem>
+            <MenuItem eventKey={4.3}>Separated link</MenuItem>
           </NavDropdown>
         </Nav>
         <Nav pullRight>
@@ -63,7 +75,127 @@ function NavigationBar(props) {
       </Navbar.Collapse>
     </Navbar>
   );
+} 
+
+
+class VariantSearchForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {Chromosome: '', StartPos: '', EndPos: '', Variants: ''};
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({[event.target.name]: event.target.value});
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+
+    var that = this;
+
+	fetch('/variants')
+	  .then(  
+	    function(response) {  
+	  	  return response.json();
+	    }  
+	  )  
+	  .then(
+         function(data) {
+	  	that.setState({ Variants: data });
+	     }
+	 )
+  }
+
+  render() {
+    return (
+	  <div>
+      <Form onSubmit={this.handleSubmit}>
+		<FormGroup>
+          <Label>Chromosome</Label>
+          <FormControl name='Chromosome' placeholder="Chrom" onChange={this.handleChange}/>
+        </FormGroup>
+		<FormGroup>
+          <Label>Start Position</Label>
+          <FormControl name='StartPos' placeholder="Start Pos" onChange={this.handleChange}/>
+        </FormGroup>
+		<FormGroup>
+          <Label>End Position</Label>
+          <FormControl name='EndPos' placeholder="End Pos" onChange={this.handleChange}/>
+        </FormGroup>
+		<FormGroup>
+          <Label>Select Variant Type</Label>
+          <select>
+            <option>SNPs</option>
+            <option>Indels</option>
+            <option>All</option>
+          </select>
+        </FormGroup>
+        <Button type="submit" class="btn btn-primary">Find Variants</Button>
+      </Form>
+
+      {this.state.Variants && 
+        <div class="container">
+		    <Table hover bordered condensed>
+            <thead>
+            <tr>
+              <th>ID</th>
+              <th>chrom</th>
+              <th>pos</th>
+              <th>ref</th>
+              <th>alt</th>
+            </tr>
+            </thead>
+            <tbody>
+              {
+                 this.state.Variants.map(
+                   variant => {return <tr><td>{variant[0]}</td><td>{variant[1]}</td><td>{variant[2]}</td><td>{variant[3]}</td><td>{variant[4]}</td></tr>})
+              }
+            </tbody>
+          </Table>
+        </div>
+      }
+	  </div>
+	  );
+  }
 }
+
+
+class CSNValidatorForm extends React.Component {
+  constructor() {
+    super();
+    this.state = {value: ''};
+  }
+
+  getValidationState() {
+    const length = this.state.value.length;
+    if (length > 10) return 'Valid';
+    else if (length > 5) return 'Not sure';
+    else if (length > 0) return 'Invalid';
+  }
+
+  handleChange(e) {
+    this.setState({ value: e.target.value });
+  }
+
+  render() {
+    return (
+      <form>
+        <FormGroup controlId="formBasicText" validationState={this.getValidationState()}>
+          <ControlLabel>
+            Working example with validation
+          </ControlLabel>
+          <FormControl type="text" value={this.state.value} placeholder="Enter text" onChange={this.handleChange}/>
+          <FormControl.Feedback />
+          <HelpBlock>Validation is based on string length.</HelpBlock>
+        </FormGroup>
+      </form>
+    );
+  }
+}
+
 
 
 function GeneSearchBox(props) {
