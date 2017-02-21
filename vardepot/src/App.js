@@ -74,6 +74,8 @@ class App extends Component {
 		<Router history={browserHistory}>
 		  <Route path="/" component={Home} />
 		  <Route path="/variants" component={VariantsPage} />
+		  <Route path="/genes" component={GenesPage} />
+		  <Route path="/csn" component={CSNPage} />
 		</Router>
     );
   }
