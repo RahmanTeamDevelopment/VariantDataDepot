@@ -1,4 +1,4 @@
-import { React } from 'react';
+import React from 'react';
 import { Button } from 'react-bootstrap';
 import { FormGroup, FormControl, Table, Form, Label } from 'react-bootstrap';
 

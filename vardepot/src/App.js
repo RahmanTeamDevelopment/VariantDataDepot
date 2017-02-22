@@ -1,15 +1,16 @@
-import React, { Component } from 'react';
-import { Router, Route, browserHistory } from 'react-router';
+import React from 'react';
+import { IndexRoute, Router, Route, browserHistory, hashHistory } from 'react-router';
 import { Navbar, NavItem, Nav } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import { GenesPage } from './pages/genes';
-import { VariantsPage } from './pages/variants';
-import { CSNPage } from './pages/csn';
+import GenesPage from './pages/genes';
+import VariantsPage from './pages/variants';
+import CSNPage from './pages/csn';
+import NotFound from './pages/NotFound';
 import logo from './logo.svg';
 import './App.css';
 
 
-class Home extends Component {
+class Home extends React.Component {
   render() {
     return (
 	  <div className="parent">
@@ -21,9 +22,12 @@ class Home extends Component {
             <p className="App-intro">
               A curated database of variants discovered in clinical testing
             </p>
-			<div className="Navigation-bar">
-			  <NavigationBar />
-			</div>
+          </div>
+		  <div className="Navigation-bar">
+			<NavigationBar />
+		  </div>
+          <div>
+          {this.props.children}
           </div>
 	  </div>
     );
@@ -63,14 +67,16 @@ function NavigationBar(props) {
 } 
 
 
-class App extends Component {
+class App extends React.Component {
   render() {
     return (
-		<Router history={browserHistory}>
-		  <Route path="/" component={Home} />
-		  <Route path="/variants" component={VariantsPage} />
-		  <Route path="/genes" component={GenesPage} />
-		  <Route path="/csn" component={CSNPage} />
+		<Router history={hashHistory}>
+		  <Route path="/" component={Home}>
+		    <Route path="variants" component={VariantsPage} />
+		    <Route path="genes" component={GenesPage} />
+		    <Route path="csn" component={CSNPage} />
+		    <Route path="*" component={NotFound} />
+          </Route>
 		</Router>
     );
   }
