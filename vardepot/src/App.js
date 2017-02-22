@@ -1,17 +1,12 @@
 import React, { Component } from 'react';
-import ReactBootstrap from 'react-bootstrap';
-import { Router, Route, browserHistory, hashHistory, Link } from 'react-router';
-import { Button, Navbar, NavItem, Nav, MenuItem, NavDropdown } from 'react-bootstrap';
+import { Router, Route, browserHistory } from 'react-router';
+import { Navbar, NavItem, Nav } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import { ButtonToolbar, FormGroup, FormControl, Table, Form, ControlLabel, HelpBlock, Label, Select} from 'react-bootstrap';
-import { ButtonGroup } from 'react-bootstrap';
 import { GenesPage } from './pages/genes';
 import { VariantsPage } from './pages/variants';
 import { CSNPage } from './pages/csn';
 import logo from './logo.svg';
 import './App.css';
-
-{/*import {BrowserRouter as Router} from 'react-router-dom'*/}
 
 
 class Home extends Component {

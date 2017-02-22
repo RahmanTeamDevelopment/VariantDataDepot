@@ -1,8 +1,5 @@
-import React, { Component } from 'react';
-import ReactBootstrap from 'react-bootstrap';
-import { Button, Navbar, NavItem, Nav, MenuItem, NavDropdown } from 'react-bootstrap';
-import { ButtonToolbar, FormGroup, FormControl, Table, Form, ControlLabel, HelpBlock, Label, Select} from 'react-bootstrap';
-import { ButtonGroup } from 'react-bootstrap';
+import React from 'react';
+import { FormGroup, FormControl, Form, ControlLabel, HelpBlock} from 'react-bootstrap';
 
 
 class CSNPage extends React.Component {
@@ -24,7 +21,7 @@ class CSNPage extends React.Component {
 
   render() {
     return (
-      <form>
+      <Form>
         <FormGroup controlId="formBasicText" validationState={this.getValidationState()}>
           <ControlLabel>
             Working example with validation
@@ -33,7 +30,7 @@ class CSNPage extends React.Component {
           <FormControl.Feedback />
           <HelpBlock>Validation is based on string length.</HelpBlock>
         </FormGroup>
-      </form>
+      </Form>
     );
   }
 }

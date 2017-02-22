@@ -1,8 +1,6 @@
-import React, { Component } from 'react';
-import ReactBootstrap from 'react-bootstrap';
-import { Button, Navbar, NavItem, Nav, MenuItem, NavDropdown } from 'react-bootstrap';
-import { ButtonToolbar, FormGroup, FormControl, Table, Form, ControlLabel, HelpBlock, Label, Select} from 'react-bootstrap';
-import { ButtonGroup } from 'react-bootstrap';
+import { React } from 'react';
+import { Button } from 'react-bootstrap';
+import { FormGroup, FormControl, Table, Form, Label } from 'react-bootstrap';
 
 
 class VariantsPage extends React.Component {

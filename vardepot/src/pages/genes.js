@@ -1,5 +1,5 @@
-import {React, Component} from 'react';
-import {Navbar, Button, FormGroup, FormControl} from 'react-bootstrap';
+import { React } from 'react';
+import { Navbar, Button, FormGroup, FormControl } from 'react-bootstrap';
 
 function GenesPage(props) {
   return (
