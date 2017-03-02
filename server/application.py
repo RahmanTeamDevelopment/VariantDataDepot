@@ -17,6 +17,75 @@ application.config.update(dict(
 application.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
 
+def get_vcf_info_value(info_field, key):
+    for key_val in info_field.split(";"):
+        this_key,val = key_val.split("=", 1)
+        if this_key == key:
+            return val
+
+
+def add_variants_from_vcf_to_database(the_file):
+    cursor = get_db()
+    num_vars = 0
+
+    for index,line in enumerate(the_file):
+        if line.startswith("##"):
+            continue
+        elif line.startswith("#"):
+            sample = line.split("\t")[9]
+            continue
+        else:
+            cols = line.strip().split("\t")
+            chrom,pos,the_id,ref,alt,qual,the_filter,info,the_format,sample_data = cols[0:10]
+            gene = get_vcf_info_value(info, "GENE")
+            transcript = get_vcf_info_value(info, "ENST")
+            csn = get_vcf_info_value(info, "CSN")
+            genotype = sample_data.split(":")[0]
+            var_type = get_vcf_info_value(info, "CLASS")
+
+            if index % 100000 == 0:
+                print index, line
+                print "\n\nSample is {}\n\n".format(sample)
+
+            cursor.execute(
+                "insert into variants"
+                "(submitter, sample, chrom, pos, ref, alt, gene, transcript, csn, genotype, type)"
+                "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                ("rahmanlab", sample, chrom, pos, ref, alt, gene, transcript, csn, genotype, var_type)
+            )
+            num_vars += 1
+
+    g.db.commit()
+    return num_vars
+
+
+def add_variants_from_txt_to_database(the_file):
+    cursor = get_db()
+    num_vars = 0
+
+    for index,line in enumerate(the_file):
+        if index == 0:
+            continue
+
+        cols = line.strip().split("\t")
+        sample,gene,csn,genotype,flag,var_type,transcript = cols
+
+        if index % 1000 == 0:
+            print index, line
+
+        cursor.execute(
+            "insert into variants"
+            "(submitter, sample, chrom, pos, ref, alt, gene, transcript, csn, genotype, type)"
+            "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            ("rahmanlab", sample, "NA", "NA", "NA", "NA", gene, transcript, csn, genotype, var_type)
+        )
+
+        num_vars += 1
+
+    g.db.commit()
+    return num_vars
+
+
 def connect_db():
     conn = sqlite3.connect(application.config['DATABASE'])
     return conn
@@ -77,9 +146,20 @@ def show_single_variant(csn):
     return jsonify(vardata)
 
 
-@application.route('/upload_variants', methods=['GET'])
+@application.route('/upload_variants', methods=['GET', 'POST'])
 def upload_variants():
-    return render_template('upload_variants.html')
+    if request.method == 'POST':
+        the_file = request.files['file']
+        if the_file.filename.endswith("vcf"):
+            num_vars = add_variants_from_vcf_to_database(the_file)
+        elif the_file.filename.endswith("txt"):
+            num_vars = add_variants_from_txt_to_database(the_file)
+        else:
+            return jsonify("Error: unknown file-type for file {}. Extension must be .vcf or .txt".format(the_file.filename))
+
+        return render_template('upload_variants.html', num_vars=num_vars)
+
+    return render_template('upload_variants.html', num_vars=0)
 
 
 @application.route('/variants_by_freq', methods=['GET'])
