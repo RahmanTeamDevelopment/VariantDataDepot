@@ -7,3 +7,6 @@
 
 # Sqlite databases
 *.db 
+
+# Virtual environment
+/env
