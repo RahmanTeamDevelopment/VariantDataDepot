@@ -44,8 +44,19 @@
 						</p>
 					</div>
 				</div>
-			</div>
-		</div>
+
+                <form action="/variants_by_pos" method="post" id="usrform">
+                    <input type="text" name="chrom" placeholder="chr1" style="width:165px; font-size: 27px; border: 2px solid gray">
+                    <input type="text" name="start_pos" placeholder="10001" style="width:165px; font-size: 27px; border: 2px solid gray">
+                    <input type="text" name="end_pos" placeholder="20001" style="width:165px; font-size: 27px; border: 2px solid gray">
+                    <div class="row" style="position: relative; top: 20px">
+                        <div class="col-lg-12">
+                            <input class="btn btn-primary btn-md pull-left" type="submit" id="submitbtn" value="Submit">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </body>
 

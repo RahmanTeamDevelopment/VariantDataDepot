@@ -81,8 +81,22 @@ def variant_by_csn():
     return render_template('variants_by_csn.html')
 
 
-@application.route('/variants_by_pos', methods=['GET'])
+@application.route('/variants_by_pos', methods=['GET', 'POST'])
 def variant_by_pos():
+
+    if request.method == 'POST':
+        chrom = request.form['chrom']
+        start_pos = request.form['start_pos']
+        end_pos = request.form['end_pos']
+
+        cursor = get_db()
+        cursor.execute(
+            'select * from variants where chrom = ? and pos >= ? and pos <= ? order by chrom,pos asc',
+            (chrom, start_pos, end_pos)
+        )
+
+        return render_template('variant_table.html', variants=cursor.fetchall())
+
     return render_template('variants_by_pos.html')
 
 
