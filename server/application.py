@@ -42,8 +42,10 @@ def close_db(error):
 @application.route('/')
 def home():
     num_vars_response = num_variants()
-    num_vars = json.loads(num_vars_response.data)['num_variants']
-    return render_template("index.html", num_vars=num_vars)
+    num_samples_response = num_samples()
+    number_of_vars = json.loads(num_vars_response.data)['num_variants']
+    number_of_samples = json.loads(num_samples_response.data)['num_samples']
+    return render_template("index.html", num_vars=number_of_vars, num_samples=number_of_samples)
 
 
 @application.route('/num_variants')
@@ -53,6 +55,15 @@ def num_variants():
     result = cur.fetchone()
     num_variants = result[0]
     return jsonify({"num_variants": num_variants})
+
+
+@application.route('/num_samples')
+def num_samples():
+    cur = get_db()
+    cur.execute('select count(distinct sample) from variants')
+    result = cur.fetchone()
+    num_variants = result[0]
+    return jsonify({"num_samples": num_variants})
 
 
 @application.route('/variant/<csn>')
@@ -78,12 +89,21 @@ def variants_by_freq():
 
 @application.route('/variants_by_csn', methods=['GET'])
 def variant_by_csn():
+    if request.method == 'POST':
+        csn = request.form['csn']
+        cursor = get_db()
+        cursor.execute(
+            'select submitter,sample,csn,gene,transcript,genotype from variants where csn = ? order by chrom,pos asc',
+            (csn)
+        )
+
+        return render_template('variant_table.html', variants=cursor.fetchall())
+
     return render_template('variants_by_csn.html')
 
 
 @application.route('/variants_by_pos', methods=['GET', 'POST'])
 def variant_by_pos():
-
     if request.method == 'POST':
         chrom = request.form['chrom']
         start_pos = request.form['start_pos']

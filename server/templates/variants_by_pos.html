@@ -44,15 +44,27 @@
 						</p>
 					</div>
 				</div>
-
                 <form action="/variants_by_pos" method="post" id="usrform">
-                    <input type="text" name="chrom" placeholder="chr1" style="width:165px; font-size: 27px; border: 2px solid gray">
-                    <input type="text" name="start_pos" placeholder="10001" style="width:165px; font-size: 27px; border: 2px solid gray">
-                    <input type="text" name="end_pos" placeholder="20001" style="width:165px; font-size: 27px; border: 2px solid gray">
-                    <div class="row" style="position: relative; top: 20px">
-                        <div class="col-lg-12">
-                            <input class="btn btn-primary btn-md pull-left" type="submit" id="submitbtn" value="Submit">
+                    <div class="form-group row">
+                        <label class="col-2 col-form-label">Chromosome</label>
+                        <div class="col-10">
+                            <input type="text" class="form-control" name="chrom" placeholder="chr1">
                         </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-2 col-form-label">Start Position</label>
+                        <div class="col-10">
+                            <input type="text" class="form-control" name="start_pos" placeholder="10001">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-2 col-form-label">End Position</label>
+                        <div class="col-10">
+                            <input type="text" class="form-control" name="end_pos" placeholder="20001">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <button class="btn btn-primary" type="submit">Submit</button>
                     </div>
                 </form>
             </div>
