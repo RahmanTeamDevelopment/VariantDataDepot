@@ -91,7 +91,7 @@ def variant_by_pos():
 
         cursor = get_db()
         cursor.execute(
-            'select * from variants where chrom = ? and pos >= ? and pos <= ? order by chrom,pos asc',
+            'select submitter,sample,csn,gene,transcript,genotype from variants where chrom = ? and pos >= ? and pos <= ? order by chrom,pos asc',
             (chrom, start_pos, end_pos)
         )
 
