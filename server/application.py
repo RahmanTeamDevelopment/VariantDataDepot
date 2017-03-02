@@ -162,19 +162,14 @@ def upload_variants():
     return render_template('upload_variants.html', num_vars=0)
 
 
-@application.route('/variants_by_freq', methods=['GET'])
-def variants_by_freq():
-    return render_template('variants_by_freq.html')
-
-
-@application.route('/variants_by_csn', methods=['GET'])
+@application.route('/variants_by_csn', methods=['GET', 'POST'])
 def variant_by_csn():
     if request.method == 'POST':
         csn = request.form['csn']
         cursor = get_db()
         cursor.execute(
             'select submitter,sample,csn,gene,transcript,genotype from variants where csn = ? order by chrom,pos asc',
-            (csn)
+            (csn,)
         )
 
         return render_template('variant_table.html', variants=cursor.fetchall())
