@@ -139,11 +139,28 @@ def num_samples():
 def show_single_variant(csn):
     cur = get_db()
     cur.execute(
-        'select * from variants where csn = %s', (csn,)
+        'select * from variants where csn = ?', (csn,)
     )
 
     vardata = cur.fetchone()
     return jsonify(vardata)
+
+
+@application.route('/variants_by_gene/<gene>')
+def variants_by_gene(gene):
+    cur = get_db()
+
+    if request.args.get('type') is not None:
+        impact_type = request.args.get('type')
+        cur.execute(
+            'select * from variants where gene = ? and type = ?', (gene,impact_type)
+        )
+    else:
+        cur.execute(
+            'select * from variants where gene = ?', (gene,)
+        )
+
+    return jsonify(cur.fetchall())
 
 
 @application.route('/upload_variants', methods=['GET', 'POST'])
@@ -207,7 +224,6 @@ def show_variants():
         variants.append( (index, chrom, pos, ref, alt) )
 
     return jsonify(variants)
-    #return render_template('show_variants.html', variants=variants)
 
 
 if __name__ == "__main__":

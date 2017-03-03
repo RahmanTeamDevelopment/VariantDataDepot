@@ -5,18 +5,18 @@ conn = sqlite3.connect("variant_depot.db")
 cursor = conn.cursor()
 
 cursor.execute("""create table variants (
-	id serial primary key,
-	submitter varchar(50) not null,
-	sample varchar(50) not null,
-	chrom varchar(20) not null,
+	id integer primary key,
+	submitter text not null,
+	sample text not null,
+	chrom text not null,
 	pos integer not null,
-	ref varchar(20) not null,
-	alt varchar(20) not null,
-	gene varchar(30) not null,
-	transcript varchar(30) not null,
-	csn varchar(50) not null,
-	genotype varchar (3) not null,
-	type varchar(20) not null);""")
+	ref text not null,
+	alt text not null,
+	gene text not null,
+	transcript text not null,
+	csn text not null,
+	genotype text not null,
+	type text not null);""")
 
 conn.commit()
 cursor.close()
