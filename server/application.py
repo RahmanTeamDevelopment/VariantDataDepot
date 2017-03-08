@@ -138,6 +138,9 @@ def num_samples():
 @application.route('/variant/<csn>')
 def show_single_variant(csn):
     cur = get_db()
+
+    if request.args.get('gene') is None:
+
     cur.execute(
         'select * from variants where csn = ?', (csn,)
     )
